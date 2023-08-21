@@ -40,13 +40,13 @@ jobs:
 
       - name: Create TAR 
         run: |
-          buildah push ${{ steps.build-image.image-with-tag }} oci-archive:/tmp/images/${{ steps.build-image.image-with-tag }}.tar
+          buildah push  ${{ env.IMAGE }}:${{ env.TAG }}-${{ env.ARCH }} oci-archive:/tmp/images/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}.tar
 
       - name: Upload image
         uses: actions/upload-artifact@v3
         with:
           name:  ${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}
-          path: /tmp/images/${{ steps.build-image.image-with-tag }}.tar
+          path: /tmp/images/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}.tar
           if-no-files-found: error
           retention-days: 1
 
