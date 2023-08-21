@@ -45,7 +45,7 @@ jobs:
       - name: Upload image
         uses: actions/upload-artifact@v3
         with:
-          # name:  ${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}
+          name:  images
           path: /tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}.tar
           if-no-files-found: error
           retention-days: 1
@@ -57,17 +57,20 @@ jobs:
     steps:
       - name: Download images
         uses: actions/download-artifact@v3
+        with:
+          name: images
+          path: /tmp
         # All artifacts
 
       - name: List Downloaded artifact
         run: | 
-          ls
+          ls /tmp
 
       - name: Manifest
         run: |
           buildah manifest create ${{ env.IMAGE }}:${{ env.TAG }}
           for arch in "amd64" "arm64"; do
-            buildah manifest add ${{ env.IMAGE }}:${{ env.TAG }} oci-archive:${{ env.IMAGE }}-${{ env.TAG }}-$arch
+            buildah manifest add ${{ env.IMAGE }}:${{ env.TAG }} oci-archive:/tmp/${{ env.IMAGE }}-${{ env.TAG }}-$arch.tar
           done 
 
       - name: Push To Registry
