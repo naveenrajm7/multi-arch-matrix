@@ -61,8 +61,6 @@ jobs:
 
       - name: Manifest
         run: |
-          # Failure should not stop 
-          # buildah manifest rm ${{ env.IMAGE }}:${{ env.TAG }}
           buildah manifest create ${{ env.IMAGE }}:${{ env.TAG }}
           for arch in "amd64" "arm64"; do
             buildah manifest add ${{ env.IMAGE }}-${{ env.TAG }}-$arch
