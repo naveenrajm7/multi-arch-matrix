@@ -45,7 +45,7 @@ jobs:
       - name: Upload image
         uses: actions/upload-artifact@v3
         with:
-          name:  ${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}
+          # name:  ${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}
           path: /tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}.tar
           if-no-files-found: error
           retention-days: 1
