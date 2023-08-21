@@ -1,0 +1,39 @@
+name: Multiarch build
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build multi-architecture image using matrix strategy
+    runs-on: ubuntu-latest
+    # strategy:
+    #   matrix:
+    #     platform: [linux/amd64, linux/arm64]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install qemu dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+
+      - name: Buildah Action
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: container1
+          tags: v1
+          platforms: linux/amd64, linux/arm64
+          containerfiles: Containerfile1   
+
+      - name: Push To Registry
+        id: push-to-quay
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: quay.io/naveenrajm
+          username: ${{ secrets.QUAY_USER }}
+          password: ${{ secrets.QUAY_PASSWORD }}
