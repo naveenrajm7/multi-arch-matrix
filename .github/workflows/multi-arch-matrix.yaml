@@ -40,13 +40,13 @@ jobs:
 
       - name: Create TAR 
         run: |
-          buildah push  ${{ env.IMAGE }}:${{ env.TAG }}-${{ env.ARCH }} oci-archive:/tmp/images/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}.tar
+          buildah push  ${{ env.IMAGE }}:${{ env.TAG }}-${{ env.ARCH }} oci-archive:/tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}.tar
 
       - name: Upload image
         uses: actions/upload-artifact@v3
         with:
           name:  ${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}
-          path: /tmp/images/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}.tar
+          path: /tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}.tar
           if-no-files-found: error
           retention-days: 1
 
@@ -64,7 +64,7 @@ jobs:
           buildah manifest rm ${{ env.IMAGE }}:${{ env.TAG }}
           buildah manifest create ${{ env.IMAGE }}:${{ env.TAG }}
           for arch in "amd64" "arm64"; do
-            buildah manifest add ${{ env.IMAGE }}:${{ env.TAG }}-$arch
+            buildah manifest add ${{ env.IMAGE }}-${{ env.TAG }}-$arch
           done 
 
       - name: Push To Registry
